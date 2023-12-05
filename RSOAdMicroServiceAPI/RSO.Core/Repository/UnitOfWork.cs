@@ -1,32 +1,32 @@
-﻿using RSO.Core.UserModels;
+﻿using RSO.Core.AdModels;
 using RSO.Core.Repository;
 
-namespace UserServiceRSO.Repository;
+namespace AdServiceRSO.Repository;
 
 /// <summary>
 /// Implements the <see cref="IUnitOfWork"/> interface.
 /// </summary>
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly UserServicesRSOContext _userServicesRSOContext;
+    private readonly AdServicesRSOContext _AdServicesRSOContext;
     private bool disposed;
 
     /// <summary>
     /// Constructor for the <see cref="UnitOfWork"/> class.
     /// </summary>
-    /// <param name="userServicesRSOContext ">The <see cref="userServicesRSOContext "/> context for the database access.</param>
-    /// <param name="userRepository">IUserRepository instance.</param>
-    public UnitOfWork(UserServicesRSOContext userServicesRSOContext, IUserRepository userRepository)
+    /// <param name="AdServicesRSOContext ">The <see cref="AdServicesRSOContext "/> context for the database access.</param>
+    /// <param name="adRepository">IAdRepository instance.</param>
+    public UnitOfWork(AdServicesRSOContext AdServicesRSOContext, IAdRepository adRepository)
     {
-        _userServicesRSOContext = userServicesRSOContext;
-        UserRepository = userRepository;
+        _AdServicesRSOContext = AdServicesRSOContext;
+        AdRepository = adRepository;
     }
 
     ///<inheritdoc/>
-    public IUserRepository UserRepository { get; }
+    public IAdRepository AdRepository { get; }
 
     ///<inheritdoc/>
-    public async Task<int> SaveChangesAsync() => await _userServicesRSOContext.SaveChangesAsync();
+    public async Task<int> SaveChangesAsync() => await _AdServicesRSOContext.SaveChangesAsync();
 
     /// <summary>
     /// Implements the <see cref="IDisposable"/> interface. Called when we'd like to the dispose the <see cref="UnitOfWork"/> object.
@@ -38,7 +38,7 @@ public class UnitOfWork : IUnitOfWork
         {
             if (disposing)
             {
-                _userServicesRSOContext.Dispose();
+                _AdServicesRSOContext.Dispose();
             }
         }
         disposed = true;

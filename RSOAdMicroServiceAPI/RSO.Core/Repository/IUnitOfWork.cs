@@ -1,6 +1,6 @@
 ﻿using RSO.Core.Repository;
 
-namespace UserServiceRSO.Repository;
+namespace AdServiceRSO.Repository;
 
 /// <summary>
 /// Handles the communication with the database.
@@ -10,7 +10,7 @@ public interface IUnitOfWork : IDisposable
     /// <summary>
     /// The repository that handles joined database tables.
     /// </summary>
-    public IUserRepository UserRepository { get; }
+    public IAdRepository AdRepository { get; }
 
     /// <summary>
     /// Applies the operation. Called after a Repository function is called.

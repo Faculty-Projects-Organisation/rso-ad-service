@@ -1,13 +1,13 @@
 ﻿{
    "CodeGenerationMode": 3,
-   "ContextClassName": "UserServicesRSOContext",
+   "ContextClassName": "AdServicesRSOContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "UserModels",
+   "OutputPath": "AdModels",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "RSO.Core",
    "Schemas": null,
@@ -16,11 +16,11 @@
    "T4TemplatePath": null,
    "Tables": [
       {
-         "Name": "public.User",
+         "Name": "public.Ad",
          "ObjectType": 0
       }
    ],
-   "UiHint": ".usersdb",
+   "UiHint": ".ad_service_db",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": true,

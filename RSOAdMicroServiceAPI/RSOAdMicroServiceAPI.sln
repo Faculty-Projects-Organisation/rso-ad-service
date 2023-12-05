@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSOAdMicroservice", "RSOAdMicroservice\RSOAdMicroservice.csproj", "{5D57291E-FE1B-4DB1-A6E8-6D93CE1B50D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSO.Core", "..\..\rso-user-service\RSOUserMicroServiceAPI\RSO.Core\RSO.Core.csproj", "{4B2CDE47-F0D1-403B-B2B8-DC088A6E683E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSO.Core", "RSO.Core\RSO.Core.csproj", "{D46DA688-6101-4279-A1C4-48136DC964DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{5D57291E-FE1B-4DB1-A6E8-6D93CE1B50D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D57291E-FE1B-4DB1-A6E8-6D93CE1B50D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D57291E-FE1B-4DB1-A6E8-6D93CE1B50D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B2CDE47-F0D1-403B-B2B8-DC088A6E683E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B2CDE47-F0D1-403B-B2B8-DC088A6E683E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B2CDE47-F0D1-403B-B2B8-DC088A6E683E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B2CDE47-F0D1-403B-B2B8-DC088A6E683E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D46DA688-6101-4279-A1C4-48136DC964DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D46DA688-6101-4279-A1C4-48136DC964DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D46DA688-6101-4279-A1C4-48136DC964DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D46DA688-6101-4279-A1C4-48136DC964DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

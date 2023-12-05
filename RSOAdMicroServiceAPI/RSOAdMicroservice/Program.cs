@@ -1,8 +1,24 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using RSO.Core.Configurations;
+using RSO.Core.AdModels;
+using AdServiceRSO.Repository;
+using RSO.Core.Repository;
+using Carter;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Database settings
+builder.Services.AddDbContext<AdServicesRSOContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAdRepository, AdRepository>();
+
+//builder.Services.AddScoped<IAdLogic, AdLogic>();
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddCarter();
 
 // Add services to the container.
 builder.Services.AddAuthorization();
@@ -26,31 +42,14 @@ builder.Services.AddSwaggerGen(swagger =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapCarter();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
+
+//app.UseAuthentication();
+//app.UseAuthorization();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
