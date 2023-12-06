@@ -14,12 +14,12 @@ public partial class Ad
     public int ID { get; set; }
 
     [Column(TypeName = "char")]
-    public char Thing { get; set; }
+    public string Thing { get; set; }
 
     public int? Price { get; set; }
 
     [Column(TypeName = "char")]
-    public char? Category { get; set; }
+    public string Category { get; set; }
 
     public DateTime PostTime { get; set; }
 }

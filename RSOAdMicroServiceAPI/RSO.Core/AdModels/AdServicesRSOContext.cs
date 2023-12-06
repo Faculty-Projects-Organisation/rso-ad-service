@@ -13,7 +13,7 @@ public partial class AdServicesRSOContext : DbContext
     {
     }
 
-    public virtual DbSet<Ad> ad { get; set; }
+    public virtual DbSet<Ad> ads { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
