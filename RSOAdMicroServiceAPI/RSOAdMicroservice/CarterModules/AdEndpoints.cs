@@ -22,7 +22,7 @@ public class AdEndpoints : ICarterModule
         //    Produces(StatusCodes.Status401Unauthorized);
     }
 
-    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic)
+    public static async Task<Results<Ok<List<ads>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic)
     {
         var ads = await adLogic.GetAllAdsAsync();
         if (ads is null)
