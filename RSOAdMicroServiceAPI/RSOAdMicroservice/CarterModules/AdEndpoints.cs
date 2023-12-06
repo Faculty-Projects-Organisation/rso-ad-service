@@ -1,4 +1,5 @@
 ﻿using Carter;
+using Microsoft.AspNetCore.Http.HttpResults;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 
@@ -13,9 +14,7 @@ public class AdEndpoints : ICarterModule
         var group = app.MapGroup("/api/ad/");
 
         group.MapGet("", GetAllAds).WithName(nameof(GetAllAds)).
-            Produces(StatusCodes.Status200OK).
-            Produces(StatusCodes.Status400BadRequest).
-            Produces(StatusCodes.Status401Unauthorized);
+            Produces(StatusCodes.Status200OK);
 
         //group.MapGet("{id}", GetAdById).WithName(nameof(GetAdById)).
         //    Produces(StatusCodes.Status200OK).
@@ -23,9 +22,15 @@ public class AdEndpoints : ICarterModule
         //    Produces(StatusCodes.Status401Unauthorized);
     }
 
-    public static async Task GetAllAds(IAdLogic adLogic)
+    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic)
     {
         var ads = await adLogic.GetAllAdsAsync();
+        if (ads is null)
+        {
+            return TypedResults.BadRequest("Couldn't find any ads.");
+        }
+
+        return TypedResults.Ok(ads);
     }
 
     //private static async Task GetAllAds(HttpContext context)

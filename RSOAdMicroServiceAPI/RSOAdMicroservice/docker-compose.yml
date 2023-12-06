@@ -11,7 +11,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      # - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
     healthcheck:
@@ -21,6 +21,6 @@ services:
       retries: 5
       start_period: 10s
 
-# volumes:
-#   db_data:
+volumes:
+  db_data:
     # This named volume will store the PostgreSQL data

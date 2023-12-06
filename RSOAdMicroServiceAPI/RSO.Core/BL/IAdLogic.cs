@@ -6,5 +6,5 @@ namespace RSO.Core.BL;
 public interface IAdLogic
 {
     public Task<Ad> GetAdByIdAsync(int id);
-    public Task<IEnumerable<T>> GetAllAdsAsync();
+    public Task<List<Ad>> GetAllAdsAsync();
 }

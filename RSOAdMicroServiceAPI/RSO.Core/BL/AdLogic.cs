@@ -1,27 +1,50 @@
+using AdServiceRSO.Repository;
+using LazyCache;
 using RSO.Core.AdModels;
-using RSO.Core.Repository;
-
+using RSO.Core.Configurations;
 
 namespace RSO.Core.BL;
 
 public class AdLogic : IAdLogic
 {
-    private readonly IAdRepository _adRepository;
+    private readonly IAppCache _appcache;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly JwtSecurityTokenConfiguration _jwtConfiguration;
 
-    //public AdLogic(IAdRepository adRepository)
-    //{
-    //    _adRepository = adRepository;
-    //}
+    /// <summary>
+    /// Initializes the <see cref="UserLogic"/> class.
+    /// </summary>
+    /// <param name="appcache"><see cref="IAppCache"/> instance.</param>
+    /// <param name="unitOfWork"><see cref="IUnitOfWork"/> instance.</param>
+    /// <param name="jwtConfiguration"><see cref="JwtSecurityTokenConfiguration"/> dependency injection.</param>
+    public AdLogic(IAppCache appcache, IUnitOfWork unitOfWork, JwtSecurityTokenConfiguration jwtConfiguration)
+    {
+        _appcache = appcache;
+        _unitOfWork = unitOfWork;
+        _jwtConfiguration = jwtConfiguration;
+    }
 
     public async Task<Ad> GetAdByIdAsync(int id)
     {
-        return await _adRepository.GetByIdAsync(id);
+        try
+        {
+            return await _unitOfWork.AdRepository.GetByIdAsync(id);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
 
-    public async Task<IEnumerable<Ad>> GetAllAdsAsync()
+    public async Task<List<Ad>> GetAllAdsAsync()
     {
-        return await _adRepository.GetAllAsync();
+        try
+        {
+            return await _unitOfWork.AdRepository.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
-
-
 }
