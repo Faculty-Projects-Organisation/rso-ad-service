@@ -13,7 +13,7 @@ public class AdEndpoints : ICarterModule
 
         var group = app.MapGroup("/api/ad/");
 
-        group.MapGet("", GetAllAds).WithName(nameof(GetAllAds)).
+        group.MapGet("/all", GetAllAds).WithName(nameof(GetAllAds)).
             Produces(StatusCodes.Status200OK);
 
         //group.MapGet("{id}", GetAdById).WithName(nameof(GetAdById)).

@@ -1,10 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using RSO.Core.Configurations;
-using RSO.Core.AdModels;
 using AdServiceRSO.Repository;
-using RSO.Core.Repository;
 using Carter;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using RSO.Core.AdModels;
+using RSO.Core.BL;
+using RSO.Core.Configurations;
+using RSO.Core.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AdServicesRSOContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
 
+// Register the IOptions object.
+builder.Services.AddOptions<JwtSecurityTokenConfiguration>()
+    .BindConfiguration("JwtSecurityTokenConfiguration");
+// Explicitly register the settings objects by delegating to the IOptions object.
+builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<JwtSecurityTokenConfiguration>>().Value);
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAdRepository, AdRepository>();
 
-//builder.Services.AddScoped<IAdLogic, AdLogic>();
+builder.Services.AddScoped<IAdLogic, AdLogic>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCarter();
