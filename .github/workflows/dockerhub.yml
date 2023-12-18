@@ -25,4 +25,4 @@ jobs:
         context: RSOAdMicroServiceAPI/
         push: true
         tags: urban98/ad-service-api:latest
-        dockerfile: RSOAdMicroServiceAPI/RSOAdMicroservice/
+        file: RSOAdMicroServiceAPI/RSOAdMicroservice/Dockerfile
