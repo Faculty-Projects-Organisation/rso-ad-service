@@ -16,10 +16,32 @@ public class AdEndpoints : ICarterModule
         group.MapGet("/all", GetAllAds).WithName(nameof(GetAllAds)).
             Produces(StatusCodes.Status200OK);
 
-        //group.MapGet("{id}", GetAdById).WithName(nameof(GetAdById)).
-        //    Produces(StatusCodes.Status200OK).
-        //    Produces(StatusCodes.Status400BadRequest).
-        //    Produces(StatusCodes.Status401Unauthorized);
+        group.MapGet("{id}", GetAdById).WithName(nameof(GetAdById)).
+            Produces(StatusCodes.Status200OK).
+            Produces(StatusCodes.Status400BadRequest).
+            Produces(StatusCodes.Status401Unauthorized);
+
+        group.MapPost("/", CreateAd).WithName(nameof(CreateAd)).
+            Produces(StatusCodes.Status201Created).
+            Produces(StatusCodes.Status400BadRequest).
+            Produces(StatusCodes.Status401Unauthorized);
+    }
+
+    public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd)
+    {
+        try
+        {
+            var ad = await adLogic.CreateAdAsync(newAd);
+            if (ad is null)
+            {
+                return TypedResults.BadRequest("Couldn't create the ad.");
+            }
+            return TypedResults.Created("/", ad);
+        } 
+        catch (Exception ex)
+        {
+            return TypedResults.BadRequest(ex.Message);
+        }
     }
 
     public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic)
@@ -33,18 +55,14 @@ public class AdEndpoints : ICarterModule
         return TypedResults.Ok(ads);
     }
 
-    //private static async Task GetAllAds(HttpContext context)
-    //{
-    //    var adRepository = context.RequestServices.GetService<IAdRepository>();
-    //    var ads = await adRepository.GetAllAdsAsync();
-    //    await context.Response.WriteAsJsonAsync(ads);
-    //}
+    public static async Task<Results<Ok<Ad>, BadRequest<string>>> GetAdById(IAdLogic adLogic, int id)
+    {
+        var ad = await adLogic.GetAdByIdAsync(id);
+        if (ad is null)
+        {
+            return TypedResults.BadRequest("Couldn't find any ads.");
+        }
 
-    //private static async Task GetAdById(HttpContext context)
-    //{
-    //    var adRepository = context.RequestServices.GetService<IAdRepository>();
-    //    var id = context.Request.RouteValues.As<int>("id");
-    //    var ad = await adRepository.GetAdByIdAsync(id);
-    //    await context.Response.WriteAsJsonAsync(ad);
-    //}
+        return TypedResults.Ok(ad);
+    }
 }

@@ -7,4 +7,5 @@ public interface IAdLogic
 {
     public Task<Ad> GetAdByIdAsync(int id);
     public Task<List<Ad>> GetAllAdsAsync();
+    public Task<Ad> CreateAdAsync(Ad newAd);
 }

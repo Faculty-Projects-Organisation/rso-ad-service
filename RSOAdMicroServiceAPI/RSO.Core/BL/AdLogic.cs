@@ -20,6 +20,20 @@ public class AdLogic : IAdLogic
         _jwtConfiguration = jwtConfiguration;
     }
 
+    public async Task<Ad> CreateAdAsync(Ad newAd)
+    {
+        try
+        {
+            var ad = await _unitOfWork.AdRepository.InsertAsync(newAd);
+            await _unitOfWork.SaveChangesAsync();
+            return ad;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
     public async Task<Ad> GetAdByIdAsync(int id)
     {
         try

@@ -21,7 +21,7 @@
 
 --INSERT INTO ads (user_id, "Thing", "Price", "Category", "PostTime") VALUES (1, 'iPhone 6', 100, 'Electronics', '2016-01-01 00:00:00');
 
-CREATE TABLE Ads (
+CREATE TABLE ads (
   "ID" SERIAL PRIMARY KEY,
   "UserId" INT NOT NULL,
   "Thing" VARCHAR NOT NULL,

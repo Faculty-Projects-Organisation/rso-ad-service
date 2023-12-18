@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["RSOAdMicroservice/RSOAdMicroservice.csproj", "RSOAdMicroservice/"]
+COPY ["RSO.Core/RSO.Core.csproj", "RSO.Core/"]
 RUN dotnet restore "./RSOAdMicroservice/./RSOAdMicroservice.csproj"
 COPY . .
 WORKDIR "/src/RSOAdMicroservice"
@@ -19,7 +20,7 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./RSOAdMicroservice.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-ENV ASPNETCORE_ENVIRONMENT="Release"
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RSOAdMicroservice.dll"]
+ENV ASPNETCORE_ENVIRONMENT Release
+ENTRYPOINT ["dotnet", "RSOAdMicroservice.dll", "--environment=Release"]
