@@ -22,6 +22,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
-        context: RSOAdMicroServiceAPI/RSOAdMicroservice/
+        context: RSOAdMicroServiceAPI/
         push: true
         tags: urban98/ad-service-api:latest
+        dockerfile: RSOAdMicroServiceAPI/RSOAdMicroservice/
