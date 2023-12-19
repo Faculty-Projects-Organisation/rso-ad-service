@@ -12,6 +12,8 @@ public partial class Ad
 {
     [Key]
     public int ID { get; set; }
+    
+    public int UserId { get; set; }
 
     [Column(TypeName = "char")]
     public string Thing { get; set; }
