@@ -7,5 +7,4 @@ namespace RSO.Core.Repository;
 public class AdRepository : GenericRepository<Ad>, IAdRepository
 {
     public AdRepository(AdServicesRSOContext context) : base(context) { }
-
 }

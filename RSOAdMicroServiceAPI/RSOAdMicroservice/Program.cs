@@ -2,7 +2,6 @@ using AdServiceRSO.Repository;
 using Carter;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.Configurations;
@@ -13,6 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 //Database settings
 builder.Services.AddDbContext<AdServicesRSOContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
+
+// Register the IOptions object.
+builder.Services.AddOptions<ApiCredentialsConfiguration>()
+    .BindConfiguration("ApiCredentialsConfiguration");
+// Explicitly register the settings objects by delegating to the IOptions object.
+builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ApiCredentialsConfiguration>>().Value);
 
 // Register the IOptions object.
 builder.Services.AddOptions<JwtSecurityTokenConfiguration>()
@@ -33,19 +38,24 @@ builder.Services.AddAuthorization();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(swagger =>
+builder.Services.AddOpenApiDocument(options =>
 {
-    swagger.SwaggerDoc("v1", new OpenApiInfo()
+    options.PostProcess = document =>
     {
-        Description = "Ad microservice for E-commerce app.",
-        Title = "RSO project.",
-        Version = "v1",
-        Contact = new OpenApiContact()
+        document.Info = new()
         {
-            Name = "Aleksander Kovac & Urban Poljsak",
-            Url = new Uri("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-        }
-    });
+            Version = "v1",
+            Title = "Ad microservices API",
+            Description = "Ad microservices API endpoints",
+            TermsOfService = "Lol.",
+            Contact = new()
+            {
+                Name = "Aleksander Kovac & Urban Poljsak",
+                Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            }
+        };
+    };
+    options.UseControllerSummaryAsTagDescription = true;
 });
 
 var app = builder.Build();
@@ -53,11 +63,10 @@ var app = builder.Build();
 //app.UseHttpsRedirection();
 
 app.MapCarter();
-
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API"));
-
-//app.UseAuthentication();
-//app.UseAuthorization();
-
+app.UseOpenApi();
+app.UseSwaggerUi3(options =>
+{
+    options.Path = "/openapi";
+    options.TagsSorter = "Ads";
+});
 app.Run();
