@@ -11,6 +11,8 @@ public class AdEndpoints : ICarterModule
     {
         //app.MapGet("/", () => "Hello from Carter!");
 
+        app.MapHealthChecks("/api/ad/health");
+
         var group = app.MapGroup("/api/ad/");
 
         group.MapGet("/all", GetAllAds).WithName(nameof(GetAllAds)).

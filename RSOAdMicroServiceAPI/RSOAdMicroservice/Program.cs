@@ -7,12 +7,17 @@ using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.Configurations;
 using RSO.Core.Repository;
+using RSO.Core.Health;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Database settings
 builder.Services.AddDbContext<AdServicesRSOContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("Database")
+    .AddCheck<ExternalAPICheck>("LavbicAPI");
 
 // Register the IOptions object.
 builder.Services.AddOptions<JwtSecurityTokenConfiguration>()
