@@ -10,6 +10,9 @@ public class AdEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+
+
+        app.MapHealthChecks("/api/ad/health");
         var group = app.MapGroup("/api/ad/");
 
         group.MapGet("/all", GetAllAds).WithName(nameof(GetAllAds)).
