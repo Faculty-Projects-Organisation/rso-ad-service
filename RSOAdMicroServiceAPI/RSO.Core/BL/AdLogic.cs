@@ -5,6 +5,7 @@ using RSO.Core.AdModels;
 using RSO.Core.BL.LogicModels;
 using System.Net;
 
+
 namespace RSO.Core.BL;
 
 public class AdLogic : IAdLogic

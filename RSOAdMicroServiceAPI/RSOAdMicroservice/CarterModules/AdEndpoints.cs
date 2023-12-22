@@ -6,6 +6,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using System.Threading;
+using RSO.Core.BL.LogicModels;
 
 namespace RSOAdMicroservice.CarterModules;
 
