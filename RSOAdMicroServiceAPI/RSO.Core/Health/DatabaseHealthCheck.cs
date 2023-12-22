@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RSO.Core.AdModels;
-//using RSO.Core.BL;
 
 namespace RSO.Core.Health
 {
@@ -22,7 +21,6 @@ namespace RSO.Core.Health
                 await _context.Database.OpenConnectionAsync(cancellationToken);
                 await _context.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);
 
-                //var ad = await adLogic.GetAdByIdAsync(1);
                 return HealthCheckResult.Healthy();
             }
             catch (Exception ex)

@@ -1,7 +1,11 @@
 ﻿using Carter;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
+using System.Threading;
 
 namespace RSOAdMicroservice.CarterModules;
 
@@ -27,6 +31,9 @@ public class AdEndpoints : ICarterModule
             Produces(StatusCodes.Status201Created).
             Produces(StatusCodes.Status400BadRequest).
             Produces(StatusCodes.Status401Unauthorized);
+
+        group.MapGet("/healths", HealthCheck).WithName(nameof(HealthCheck)).
+            Produces(StatusCodes.Status200OK);
     }
 
     public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd)
@@ -66,5 +73,27 @@ public class AdEndpoints : ICarterModule
         }
 
         return TypedResults.Ok(ad);
+    }
+
+    public static async Task<Results<Ok<string>, BadRequest<string>>> HealthCheck(IAdLogic adLogic)
+    {
+        try
+        {
+            var client = new HttpClient();
+            var response = await client.GetAsync("https://api.lavbic.net/kraji/1000");
+            if (response.IsSuccessStatusCode)
+            {
+                // return string healthy
+                return TypedResults.Ok("Healthy");
+            }
+            else
+            {
+                return TypedResults.Ok("Unhealthy");
+            }
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.BadRequest(ex.Message);
+        }
     }
 }
