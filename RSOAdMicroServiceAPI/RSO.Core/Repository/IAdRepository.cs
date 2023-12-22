@@ -5,5 +5,4 @@ namespace RSO.Core.Repository;
 
 public interface IAdRepository : IGenericRepository<Ad>
 {
-
 }
