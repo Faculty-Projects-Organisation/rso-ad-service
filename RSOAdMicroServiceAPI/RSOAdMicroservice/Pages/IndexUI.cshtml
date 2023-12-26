@@ -1,0 +1,41 @@
+﻿@page "/IndexUI"
+@model RSOAdMicroservice.Pages.IndexUIModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Ads Page";
+    ViewBag.Header = "Ads";
+}
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/api/ad/all',
+            method: 'GET',
+            success: function (ads) {
+                console.log(ads);
+                var adsContainer = $('#adsContainer');
+
+                ads.forEach(function (ad) {
+                    var adElement = `
+                                <div style="background-color: #fff;
+                                        border-radius: 5px;
+                                        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+                                        margin: 15px 0;
+                                        padding: 15px;
+                                        position: relative;
+                                        overflow: hidden;">
+                                    <h3>${ad.thing}</h3>
+                                    <p style="margin: 0;">Cena: ${ad.price}&euro;</p>
+                                    <p style="margin: 0;">Kategorija: ${ad.category}</p>
+                                    <p>Objavljeno: ${ad.postTime}</p>
+                                </div>
+                            `;
+                    adsContainer.append(adElement);
+                });
+            },
+            error: function () {
+                var errorElement = $('<div>').text('Failed to fetch ads.');
+                adsContainer.append(errorElement);
+            }
+        });
+    });
+</script>

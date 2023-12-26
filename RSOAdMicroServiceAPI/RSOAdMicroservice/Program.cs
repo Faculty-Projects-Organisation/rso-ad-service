@@ -5,8 +5,8 @@ using Microsoft.Extensions.Options;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.Configurations;
-using RSO.Core.Repository;
 using RSO.Core.Health;
+using RSO.Core.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +29,8 @@ builder.Services.AddOptions<JwtSecurityTokenConfiguration>()
     .BindConfiguration("JwtSecurityTokenConfiguration");
 // Explicitly register the settings objects by delegating to the IOptions object.
 builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<JwtSecurityTokenConfiguration>>().Value);
+
+builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAdRepository, AdRepository>();
@@ -65,7 +67,10 @@ builder.Services.AddOpenApiDocument(options =>
 
 var app = builder.Build();
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
 
 app.MapCarter();
 app.UseOpenApi();
@@ -74,4 +79,13 @@ app.UseSwaggerUi3(options =>
     options.Path = "/openapi";
     options.TagsSorter = "Ads";
 });
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+});
+
 app.Run();
