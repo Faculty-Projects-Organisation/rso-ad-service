@@ -1,11 +1,7 @@
 ﻿using Carter;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
-using System.Threading;
 using RSO.Core.BL.LogicModels;
 
 namespace RSOAdMicroservice.CarterModules;
@@ -30,10 +26,10 @@ public class AdEndpoints : ICarterModule
         group.MapPost("/", CreateAd).WithName(nameof(CreateAd)).
             Produces(StatusCodes.Status201Created).
             Produces(StatusCodes.Status400BadRequest).
-            Produces(StatusCodes.Status401Unauthorized);
+            Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
 
         group.MapGet("/healths", HealthCheck).WithName(nameof(HealthCheck)).
-            Produces(StatusCodes.Status200OK);
+            Produces(StatusCodes.Status200OK).WithTags("Health");
     }
 
     public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd)

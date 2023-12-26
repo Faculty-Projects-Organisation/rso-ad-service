@@ -1,0 +1,60 @@
+﻿@page "/CreateUI"
+@model RSOAdMicroservice.Pages.CreateModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Create Ad";
+    ViewBag.Header = "Create new ad";
+}
+<div style="padding: 20pt 0;">
+    <h1 style="color: white; text-align: center;">Create new ad</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+
+                <label for="thing">Title:</label>
+                <input type="text" id="thing" name="thing" required class="form-control"><br><br>
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required class="form-control"><br><br>
+
+                <label for="category">Kategorija:</label>
+                <textarea id="category" name="category" required class="form-control"></textarea><br><br>
+
+                <button id="createAdBtn" class="btn btn-primary">Create Ad</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#createAdBtn').click(function (e) {
+            e.preventDefault();
+
+            var formData = {
+                id: 0,
+                UserId: 1,
+                thing: $('#thing').val(),
+                price: $('#price').val(),
+                category: $('#category').val(),
+                postTime: new Date().toISOString()
+            };
+            console.log(formData);
+
+            $.ajax({
+                url: '/api/ad/',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    window.location.href = '/IndexUI';
+                },
+                error: function (xhr, status, error) {
+                    // Handle error response
+                    console.log(xhr);
+                }
+            });
+        });
+    });
+</script>

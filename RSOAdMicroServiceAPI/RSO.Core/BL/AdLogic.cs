@@ -5,7 +5,6 @@ using RSO.Core.AdModels;
 using RSO.Core.BL.LogicModels;
 using System.Net;
 
-
 namespace RSO.Core.BL;
 
 public class AdLogic : IAdLogic
@@ -28,6 +27,10 @@ public class AdLogic : IAdLogic
     {
         try
         {
+            //NO TIME FOR PROPER FIXES
+            var existingAd = await _unitOfWork.AdRepository.GetAllAsync();
+            newAd.ID = existingAd.Max(ea => ea.ID) + 1;
+            
             var ad = await _unitOfWork.AdRepository.InsertAsync(newAd);
             await _unitOfWork.SaveChangesAsync();
             return ad;
