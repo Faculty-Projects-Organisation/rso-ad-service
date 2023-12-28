@@ -10,9 +10,8 @@ public class AdEndpoints : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-
-
         app.MapHealthChecks("/api/ad/health");
+
         var group = app.MapGroup("/api/ad/");
 
         group.MapGet("/all", GetAllAds).WithName(nameof(GetAllAds)).
@@ -27,9 +26,6 @@ public class AdEndpoints : ICarterModule
             Produces(StatusCodes.Status201Created).
             Produces(StatusCodes.Status400BadRequest).
             Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
-
-        group.MapGet("/healths", HealthCheck).WithName(nameof(HealthCheck)).
-            Produces(StatusCodes.Status200OK).WithTags("Health");
     }
 
     public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd)
@@ -74,27 +70,5 @@ public class AdEndpoints : ICarterModule
         var withHufConversion = new AdDetails(ad,await adLogic.GetEurosConvertedIntoForintsAsync(ad.Price.Value));
 
         return TypedResults.Ok(withHufConversion);
-    }
-
-    public static async Task<Results<Ok<string>, BadRequest<string>>> HealthCheck(IAdLogic adLogic)
-    {
-        try
-        {
-            var client = new HttpClient();
-            var response = await client.GetAsync("https://api.lavbic.net/kraji/1000");
-            if (response.IsSuccessStatusCode)
-            {
-                // return string healthy
-                return TypedResults.Ok("Healthy");
-            }
-            else
-            {
-                return TypedResults.Ok("Unhealthy");
-            }
-        }
-        catch (Exception ex)
-        {
-            return TypedResults.BadRequest(ex.Message);
-        }
     }
 }
