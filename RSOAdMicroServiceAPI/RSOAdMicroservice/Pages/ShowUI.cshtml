@@ -1,0 +1,56 @@
+﻿@page "/ShowUI"
+@model RSOAdMicroservice.Pages.ShowUIModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "View Ad";
+    ViewBag.Header = "View Ad";
+}
+
+<div style="padding: 20pt 70pt 0 70pt;">
+
+    <h1 id="thing" style="color: white;"></h1>
+    <h3 id="price" style="color: white;"></h3>
+    <h3 id="priceForints" style="color: white;"></h3>
+    <h3 id="category" style="color: white;"></h3>
+
+    <!-- Numeric input field for the ad ID -->
+    <input type="number" id="adId" placeholder="Enter Ad ID" />
+
+    <!-- Button to trigger API call -->
+    <button id="fetchAdButton">Fetch Ad</button>
+
+    <div id="commentsContainer"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Click event for the button
+        $('#fetchAdButton').click(function () {
+            // Get the ad ID from the input field
+            var adId = $('#adId').val();
+
+            // Check if the adId is a positive numeric value
+            if (!isNaN(adId) && adId > 0) {
+                $.ajax({
+                    url: `/api/ad/${adId}`,
+                    method: 'GET',
+                    success: function (ad) {
+                        console.log(ad);
+                        $('#thing').text(ad.thing);
+                        $('#price').text("Cena: " + ad.price + "€");
+                        $('#priceForints').text("Cena v madžarskih forintih: " + ad.hufPrice + "HUF");
+                        $('#category').text("Kategorija: " + ad.category);
+                    },
+                    error: function () {
+                        var errorElement = $('<div class="error">').text('Failed to fetch ad.');
+                        $('#commentsContainer').append(errorElement);
+                    }
+                });
+            } else {
+                // Handle the case when the input is not a positive numeric value
+                var errorElement = $('<div>').text('Please enter a valid positive numeric Ad ID.');
+                $('#commentsContainer').append(errorElement);
+            }
+        });
+    });
+</script>
