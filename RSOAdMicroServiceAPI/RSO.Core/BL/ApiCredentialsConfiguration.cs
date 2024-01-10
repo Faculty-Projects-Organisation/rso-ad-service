@@ -2,5 +2,5 @@
 
 public class ApiCredentialsConfiguration
 {
-    public string Token { get; init; }
+    public string Token { get; set; }
 }
