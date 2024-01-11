@@ -1,9 +1,11 @@
 ﻿using Carter;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.BL.LogicModels;
 using Serilog;
+using System.Net.Http;
 
 namespace RSOAdMicroservice.CarterModules;
 
@@ -29,9 +31,10 @@ public class AdEndpoints : ICarterModule
             Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
     }
 
-    public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd, Serilog.ILogger logger)
+    public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd, Serilog.ILogger logger, HttpContext httpContext)
     {
-        logger.Information("ad-service: Create method called");
+        var requestId = httpContext?.TraceIdentifier ?? "Unknown";
+        logger.Information("ad-service: Create method called. RequestID: {@requestId}", requestId);
         try
         {
             var ad = await adLogic.CreateAdAsync(newAd);
@@ -52,9 +55,10 @@ public class AdEndpoints : ICarterModule
         }
     }
 
-    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic, Serilog.ILogger logger)
+    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic, Serilog.ILogger logger, HttpContext httpContext)
     {
-        logger.Information("ad-service: GetAllAds method called");
+        var requestId = httpContext?.TraceIdentifier ?? "Unknown";
+        logger.Information("ad-service: GetAllAds method called. RequestID: {@requestId}", requestId);
 
         var ads = await adLogic.GetAllAdsAsync();
         if (ads is null)
@@ -67,9 +71,10 @@ public class AdEndpoints : ICarterModule
         return TypedResults.Ok(ads);
     }
 
-    public static async Task<Results<Ok<AdDetails>, BadRequest<string>>> GetAdById(IAdLogic adLogic, int id, Serilog.ILogger logger)
+    public static async Task<Results<Ok<AdDetails>, BadRequest<string>>> GetAdById(IAdLogic adLogic, int id, Serilog.ILogger logger, HttpContext httpContext)
     {
-        logger.Information("ad-service: GetAdById method called");
+        var requestId = httpContext?.TraceIdentifier ?? "Unknown";
+        logger.Information("ad-service: GetAdById method called. RequestID: {@requestId}", requestId);
 
         var ad = await adLogic.GetAdByIdAsync(id);
         if (ad is null)
