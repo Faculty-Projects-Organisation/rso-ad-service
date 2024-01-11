@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.BL.LogicModels;
+using Serilog;
 
 namespace RSOAdMicroservice.CarterModules;
 
@@ -28,8 +29,9 @@ public class AdEndpoints : ICarterModule
             Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
     }
 
-    public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd)
+    public static async Task<Results<Created<Ad>, BadRequest<string>>> CreateAd(IAdLogic adLogic, Ad newAd, Serilog.ILogger logger)
     {
+        logger.Information("ad-service: Create method called");
         try
         {
             var ad = await adLogic.CreateAdAsync(newAd);
@@ -37,30 +39,42 @@ public class AdEndpoints : ICarterModule
             {
                 return TypedResults.BadRequest("Couldn't create the ad.");
             }
+
+            logger.Information("ad-service: Ad created: {@Ad}", ad);
+            logger.Information("ad-service: Exiting method createAd");
+
             return TypedResults.Created("/", ad);
         }
         catch (Exception ex)
         {
+            logger.Error(ex, "ad-service: Error while creating ad: {@Ad}", newAd);
             return TypedResults.BadRequest(ex.Message);
         }
     }
 
-    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic)
+    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic, Serilog.ILogger logger)
     {
+        logger.Information("ad-service: GetAllAds method called");
+
         var ads = await adLogic.GetAllAdsAsync();
         if (ads is null)
         {
+            logger.Error("ad-service: Couldn't find any ads.");
             return TypedResults.BadRequest("Couldn't find any ads.");
         }
 
+        logger.Information("ad-service: Exiting method GetAllAds");
         return TypedResults.Ok(ads);
     }
 
-    public static async Task<Results<Ok<AdDetails>, BadRequest<string>>> GetAdById(IAdLogic adLogic, int id)
+    public static async Task<Results<Ok<AdDetails>, BadRequest<string>>> GetAdById(IAdLogic adLogic, int id, Serilog.ILogger logger)
     {
+        logger.Information("ad-service: GetAdById method called");
+
         var ad = await adLogic.GetAdByIdAsync(id);
         if (ad is null)
         {
+            logger.Error("ad-service: Couldn't find any ads.");
             return TypedResults.BadRequest("Couldn't find any ads.");
         }
 
@@ -68,6 +82,8 @@ public class AdEndpoints : ICarterModule
             ad.Price = 0;
 
         var withHufConversion = new AdDetails(ad,await adLogic.GetEurosConvertedIntoForintsAsync(ad.Price.Value));
+
+        logger.Information("ad-service: Exiting method GetAdById");
 
         return TypedResults.Ok(withHufConversion);
     }

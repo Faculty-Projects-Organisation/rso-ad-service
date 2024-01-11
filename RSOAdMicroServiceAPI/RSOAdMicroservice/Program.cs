@@ -7,6 +7,7 @@ using RSO.Core.BL;
 using RSO.Core.Configurations;
 using RSO.Core.Health;
 using RSO.Core.Repository;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")))
 
 builder.Services.AddHealthChecks()
     .AddCheck<DatabaseHealthCheck>("Database")
-    .AddCheck<ExternalAPICheck>("LavbicAPI");
+    .AddCheck<ExternalAPICheck>("CurrencyConverter");
 
 // Register the IOptions object.
 builder.Services.AddOptions<ApiCredentialsConfiguration>()
@@ -65,6 +66,14 @@ builder.Services.AddOpenApiDocument(options =>
     options.UseControllerSummaryAsTagDescription = true;
 });
 
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.Console()
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
@@ -87,5 +96,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapRazorPages();
     endpoints.MapControllers();
 });
+
+app.UseSerilogRequestLogging();
 
 app.Run();
