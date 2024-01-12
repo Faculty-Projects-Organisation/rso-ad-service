@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using RSO.Core.AdModels;
+using Serilog;
 
 namespace RSO.Core.Health
 {
@@ -14,7 +15,13 @@ namespace RSO.Core.Health
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
-        { 
+        {
+            LoggerConfiguration loggerConfiguration = new();
+            loggerConfiguration.WriteTo.Console();
+            var logger = loggerConfiguration.CreateLogger();
+
+            logger.Information("ad-service: Database HealthCheck started");
+
             var dbTask = ExecuteQuery(cancellationToken);
 
             // Set a timeout
@@ -30,8 +37,10 @@ namespace RSO.Core.Health
             }
             else if (dbTask.Result != "OK")
             {
+                logger.Information("ad-service: Database HealthCheck failed with message: {Message}", dbTask.Result);
                 return HealthCheckResult.Unhealthy(dbTask.Result);
             }
+            logger.Information("ad-service: Database HealthCheck succeeded");
             return HealthCheckResult.Healthy();
         }
 

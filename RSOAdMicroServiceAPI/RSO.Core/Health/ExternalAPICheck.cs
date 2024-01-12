@@ -2,7 +2,7 @@
 using RestSharp;
 using RSO.Core.BL;
 using System.Net;
-using System.Threading;
+using Serilog;
 
 namespace RSO.Core.Health
 {
@@ -16,6 +16,12 @@ namespace RSO.Core.Health
         }
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
         {
+            LoggerConfiguration loggerConfiguration = new();
+            loggerConfiguration.WriteTo.Console();
+            var logger = loggerConfiguration.CreateLogger();
+
+            logger.Information("ad-service: ExternalAPI HealthCheck started");
+
             var testTask = TestApi(cancellationToken);
             var timeoutTask = Task.Delay(TimeSpan.FromSeconds(2));
 
@@ -27,19 +33,21 @@ namespace RSO.Core.Health
                 cancellationToken.ThrowIfCancellationRequested();
                 throw new TimeoutException("Operation timed out");
             }           
-            else if (testTask.Result != null && HttpStatusCode.InternalServerError.CompareTo(testTask.Result.StatusCode) > 0) // is smaller than 500
+            else if (testTask.Result != null && HttpStatusCode.InternalServerError.CompareTo(testTask.Result.StatusCode) > 0) // response code is smaller than 500
             {
+                logger.Information("ad-service: ExternalAPI HealthCheck succeeded");
                 return HealthCheckResult.Healthy();
             }
             else
             {
+                logger.Information("ad-service: ExternalAPI HealthCheck failed with message: {Message}", testTask.Result.ErrorMessage);
                 return HealthCheckResult.Unhealthy();
             }
         }
 
         private async Task<RestResponse> TestApi(CancellationToken cancellationToken)
         {
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+            //await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
             try
             {
                 var client = new RestClient($"https://currency-converter5.p.rapidapi.com/currency/convert?format=json&from=EUR&to=HUF&amount=100");

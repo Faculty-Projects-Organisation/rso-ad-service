@@ -65,12 +65,6 @@ builder.Services.AddOpenApiDocument(options =>
     };
     options.UseControllerSummaryAsTagDescription = true;
 });
-
-//Log.Logger = new LoggerConfiguration()
-//    .WriteTo.Console()
-//    .Enrich.FromLogContext()
-//    .CreateLogger();
-
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
