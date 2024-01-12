@@ -14,20 +14,43 @@ namespace RSO.Core.Health
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
+        { 
+            var dbTask = ExecuteQuery(cancellationToken);
+
+            // Set a timeout
+            var timeoutTask = Task.Delay(TimeSpan.FromSeconds(2));
+
+            var completedTask = await Task.WhenAny(dbTask, timeoutTask);
+
+            if (completedTask == timeoutTask)
+            {
+                // The operation timed out
+                cancellationToken.ThrowIfCancellationRequested();
+                throw new TimeoutException("Operation timed out");
+            }
+            else if (dbTask.Result != "OK")
+            {
+                return HealthCheckResult.Unhealthy(dbTask.Result);
+            }
+            return HealthCheckResult.Healthy();
+        }
+
+        public async Task<string> ExecuteQuery(CancellationToken cancellationToken)
         {
+            //await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+
             try
             {
                 // connect to database and execute "select 1" query
                 await _context.Database.OpenConnectionAsync(cancellationToken);
                 await _context.Database.ExecuteSqlRawAsync("SELECT 1", cancellationToken);
-
-                return HealthCheckResult.Healthy();
             }
             catch (Exception ex)
             {
-                return HealthCheckResult.Unhealthy(ex.Message);
+                return ex.Message;
             }
 
+            return "OK";
         }
     }
 }

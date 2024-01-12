@@ -6,6 +6,7 @@ using RSO.Core.BL;
 using RSO.Core.BL.LogicModels;
 using Serilog;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace RSOAdMicroservice.CarterModules;
 
