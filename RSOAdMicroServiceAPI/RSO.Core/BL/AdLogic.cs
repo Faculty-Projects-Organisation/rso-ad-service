@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using RestSharp;
 using RSO.Core.AdModels;
 using RSO.Core.BL.LogicModels;
+using RSO.Core.Repository;
+using System.Linq.Expressions;
 using System.Net;
 
 namespace RSO.Core.BL;
@@ -52,6 +54,21 @@ public class AdLogic : IAdLogic
             return null;
         }
     }
+
+    public async Task<List<Ad>> GetAdsByUserIdAsync(int userId)
+    {
+        try
+        {
+            Expression<Func<Ad, bool>> filter = ad => ad.UserId == userId;
+
+            return await _unitOfWork.AdRepository.GetManyAsync(filter);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+
 
     public async Task<List<Ad>> GetAllAdsAsync()
     {

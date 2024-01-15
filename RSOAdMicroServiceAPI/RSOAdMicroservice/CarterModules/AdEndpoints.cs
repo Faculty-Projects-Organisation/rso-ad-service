@@ -1,12 +1,8 @@
 ﻿using Carter;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.BL.LogicModels;
-using Serilog;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace RSOAdMicroservice.CarterModules;
 
@@ -22,6 +18,11 @@ public class AdEndpoints : ICarterModule
             Produces(StatusCodes.Status200OK).WithTags("Ads");
 
         group.MapGet("{id}", GetAdById).WithName(nameof(GetAdById)).
+            Produces(StatusCodes.Status200OK).
+            Produces(StatusCodes.Status400BadRequest).
+            Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
+
+        group.MapGet("user/{id}", GetAdsByUserId).WithName(nameof(GetAdsByUserId)).
             Produces(StatusCodes.Status200OK).
             Produces(StatusCodes.Status400BadRequest).
             Produces(StatusCodes.Status401Unauthorized).WithTags("Ads");
@@ -54,6 +55,17 @@ public class AdEndpoints : ICarterModule
             logger.Error(ex, "ad-service: Error while creating ad: {@Ad}", newAd);
             return TypedResults.BadRequest(ex.Message);
         }
+    }
+
+    public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAdsByUserId(IAdLogic adLogic, int id)
+    {
+        var ads = await adLogic.GetAdsByUserIdAsync(id);
+        if (ads is null)
+        {
+            return TypedResults.BadRequest("Used doesn't have any ads.");
+        }
+
+        return TypedResults.Ok(ads);
     }
 
     public static async Task<Results<Ok<List<Ad>>, BadRequest<string>>> GetAllAds(IAdLogic adLogic, Serilog.ILogger logger, HttpContext httpContext)

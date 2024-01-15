@@ -30,7 +30,7 @@ public interface IGenericRepository<T> where T : class
     /// <param name="skip"></param>
     /// <param name="includeProperties"></param>
     /// <returns></returns>
-    public Task<IEnumerable<T>> GetManyAsync(Expression<Func<T, bool>> filter = null,
+    public Task<List<T>> GetManyAsync(Expression<Func<T, bool>> filter = null,
                               Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                               int? top = null,
                               int? skip = null,
