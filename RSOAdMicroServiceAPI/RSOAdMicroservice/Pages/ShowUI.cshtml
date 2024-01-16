@@ -18,10 +18,30 @@
     <h3 id="sold" style="color:red;" hidden>PRODANO</h3>
 
     <div id="commentsContainer"></div>
+
+    <input type="text" id="input"/>
+    <button id="request" class="btn-primary btn" style="margin: 15pt 0 40pt 0;">Test</button>
 </div>
 
 <script>
     $(document).ready(function () {
+    
+        $("#request").click(function () {
+            const url = document.getElementById('input').value;
+            console.log(url);
+            $.ajax({
+                url: url,
+                async: true,
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
 
         // Extract the ad ID from the URL
         var adId = @Model.AdId;
