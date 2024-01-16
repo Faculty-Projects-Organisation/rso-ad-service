@@ -5,4 +5,5 @@ namespace RSO.Core.Repository;
 
 public interface IAdRepository : IGenericRepository<Ad>
 {
+    public Task UpdateAdStatusAsync(Ad ad);
 }

@@ -27,7 +27,8 @@ CREATE TABLE ads (
   "Thing" VARCHAR NOT NULL,
   "Price" INTEGER,
   "Category" VARCHAR,
+  "Status" VARCHAR,
   "PostTime" TIMESTAMP
 );
 
-INSERT INTO Ads ("UserId", "Thing", "Price", "Category", "PostTime") VALUES (1, 'iPhone 6', 100, 'Electronics', '2016-01-01 00:00:00');
+INSERT INTO Ads ("UserId", "Thing", "Price", "Category", "Status", "PostTime") VALUES (1, 'iPhone 6', 100, 'Electronics', 'available', '2016-01-01 00:00:00');

@@ -19,6 +19,9 @@ builder.Services.AddHealthChecks()
     .AddCheck<DatabaseHealthCheck>("Database")
     .AddCheck<ExternalAPICheck>("CurrencyConverter");
 
+builder.Services.AddOptions<CrossEndpointsFunctionalityConfiguration>().BindConfiguration("CrossEndpointsFunctionalityConfiguration");
+builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<CrossEndpointsFunctionalityConfiguration>>().Value);
+
 // Register the IOptions object.
 builder.Services.AddOptions<ApiCredentialsConfiguration>()
     .BindConfiguration("ApiCredentialsConfiguration");

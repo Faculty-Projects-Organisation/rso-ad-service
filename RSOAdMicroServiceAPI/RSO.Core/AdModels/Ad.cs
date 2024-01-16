@@ -23,5 +23,7 @@ public partial class Ad
     [Column(TypeName = "char")]
     public string Category { get; set; }
 
+    public string Status { get; set; }
+
     public DateTime PostTime { get; set; }
 }

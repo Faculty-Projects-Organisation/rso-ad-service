@@ -19,6 +19,7 @@ public class AdDetails
             Price = add.Price;
             HufPrice = double.Parse(hufPrice,CultureInfo.InvariantCulture);
         }
+        Status = add.Status;
         Category = add.Category;
         Thing = add.Thing;
         PostTime = add.PostTime;
@@ -30,5 +31,6 @@ public class AdDetails
     public double HufPrice { get; }
     public string Category { get; }
     public string Thing { get; }
+    public string Status { get; }
     public DateTime PostTime { get; }
 }

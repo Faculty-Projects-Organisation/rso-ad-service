@@ -1,14 +1,26 @@
-﻿@page "/IndexUI"
+﻿@page "/ads/index"
 @model RSOAdMicroservice.Pages.IndexUIModel
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Ads Page";
-    ViewBag.Header = "Ads";
+    ViewBag.Title = "Stran z oglasi";
+    ViewBag.Header = "Oglasi";
 }
+
+
+<div style="padding: 20pt 70pt 0 70pt;">
+    
+    <h1 style="color: white; margin-bottom: 20pt;">@ViewBag.Header</h1>
+
+    <button class="btn-primary btn">
+        <a href="/ads/create" style="color: white; text-decoration: none;">Ustvari oglas</a>
+    </button>
+    <div id="adsContainer"></div>
+</div>
+
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: '/api/ad/all',
+            url: '/ads/api/',
             method: 'GET',
             success: function (ads) {
                 console.log(ads);
@@ -23,7 +35,7 @@
                                         padding: 15px;
                                         position: relative;
                                         overflow: hidden;">
-                                    <h3>${ad.thing}</h3>
+                                    <h3><a href="/ads/show/${ad.id}" style="text-decoration: none; color:black;">${ad.thing}</a></h3>
                                     <p style="margin: 0;">Cena: ${ad.price}&euro;</p>
                                     <p style="margin: 0;">Kategorija: ${ad.category}</p>
                                     <p>Objavljeno: ${ad.postTime}</p>

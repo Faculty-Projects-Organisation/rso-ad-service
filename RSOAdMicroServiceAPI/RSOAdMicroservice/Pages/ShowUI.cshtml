@@ -1,4 +1,4 @@
-﻿@page "/ShowUI"
+﻿@page "/ads/show/{adId:int}"
 @model RSOAdMicroservice.Pages.ShowUIModel
 @{
     Layout = "_Layout";
@@ -8,49 +8,77 @@
 
 <div style="padding: 20pt 70pt 0 70pt;">
 
+    @* h1 contains link to showui of the ad*@
     <h1 id="thing" style="color: white;"></h1>
     <h3 id="price" style="color: white;"></h3>
     <h3 id="priceForints" style="color: white;"></h3>
-    <h3 id="category" style="color: white;"></h3>
+    <h5 id="category" style="color: white;"></h5>
 
-    <!-- Numeric input field for the ad ID -->
-    <input type="number" id="adId" placeholder="Enter Ad ID" />
-
-    <!-- Button to trigger API call -->
-    <button id="fetchAdButton">Fetch Ad</button>
+    <button id="buyBtn" class="btn-primary btn" style="margin: 15pt 0 40pt 0;">Kupi</button>
+    <h3 id="sold" style="color:red;" hidden>PRODANO</h3>
 
     <div id="commentsContainer"></div>
 </div>
 
 <script>
     $(document).ready(function () {
-        // Click event for the button
-        $('#fetchAdButton').click(function () {
-            // Get the ad ID from the input field
-            var adId = $('#adId').val();
 
-            // Check if the adId is a positive numeric value
-            if (!isNaN(adId) && adId > 0) {
-                $.ajax({
-                    url: `/api/ad/${adId}`,
-                    method: 'GET',
-                    success: function (ad) {
-                        console.log(ad);
-                        $('#thing').text(ad.thing);
-                        $('#price').text("Cena: " + ad.price + "€");
-                        $('#priceForints').text("Cena v madžarskih forintih: " + ad.hufPrice + "HUF");
-                        $('#category').text("Kategorija: " + ad.category);
-                    },
-                    error: function () {
-                        var errorElement = $('<div class="error">').text('Failed to fetch ad.');
-                        $('#commentsContainer').append(errorElement);
+        // Extract the ad ID from the URL
+        var adId = @Model.AdId;
+        var theAd;
+
+        // Check if the adId is a positive numeric value
+        if (!isNaN(adId) && adId > 0) {
+            $.ajax({
+                url: `/ads/api/${adId}`,
+                method: 'GET',
+                success: function (ad) {
+                    theAd = ad;
+                    console.log(ad);
+                    console.log(ad.status);
+                    $('#thing').text(ad.thing);
+                    $('#price').text("Cena: " + ad.price + "€");
+                    $('#priceForints').text("Cena v madžarskih forintih: " + ad.hufPrice + "HUF");
+                    $('#category').text("Kategorija: " + ad.category);
+
+                    if (ad.status.localeCompare('available')) {
+                        document.getElementById('buyBtn').hidden = true;
+                        document.getElementById('sold').hidden = false;
                     }
-                });
-            } else {
-                // Handle the case when the input is not a positive numeric value
-                var errorElement = $('<div>').text('Please enter a valid positive numeric Ad ID.');
-                $('#commentsContainer').append(errorElement);
-            }
+                },
+                error: function () {
+                    var errorElement = $('<div class="error">').text('Failed to fetch ad.');
+                    $('#commentsContainer').append(errorElement);
+                }
+            });
+        } else {
+            // Handle the case when the input is not a positive numeric value
+            var errorElement = $('<div>').text('Invalid Ad ID in the URL.');
+            $('#commentsContainer').append(errorElement);
+        }
+
+        $("#buyBtn").click(function () {
+            const url = '/ads/api/initiateTransaction'; // Assuming that the registration API is hosted on the same server
+
+            $.ajax({
+                url: url,
+                async: true,
+                type: 'PATCH',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ID: theAd.id,
+                    Price: theAd.price,
+                    UserId: theAd.UserId,
+                }),
+                success: function (data) {
+                    console.log(data);
+                    document.getElementById('buyBtn').hidden = true;
+                    document.getElementById('sold').hidden = false;
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
         });
     });
 </script>
