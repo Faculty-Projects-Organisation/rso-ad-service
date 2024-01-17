@@ -18,30 +18,10 @@
     <h3 id="sold" style="color:red;" hidden>PRODANO</h3>
 
     <div id="commentsContainer"></div>
-
-    <input type="text" id="input" style="width:200pt;"/>
-    <button id="request" class="btn-primary btn" style="margin: 15pt 0 40pt 0;">Test</button>
 </div>
 
 <script>
     $(document).ready(function () {
-    
-        $("#request").click(function () {
-            const url = document.getElementById('input').value;
-            console.log(url);
-            $.ajax({
-                url: url,
-                async: true,
-                type: 'GET',
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (error) {
-                    console.error('Error:', error);
-                }
-            });
-        });
-
 
         // Extract the ad ID from the URL
         var adId = @Model.AdId;
@@ -54,8 +34,8 @@
                 method: 'GET',
                 success: function (ad) {
                     theAd = ad;
+                    console.log("got ad")
                     console.log(ad);
-                    console.log(ad.status);
                     $('#thing').text(ad.thing);
                     $('#price').text("Cena: " + ad.price + "€");
                     $('#priceForints').text("Cena v madžarskih forintih: " + ad.hufPrice + "HUF");
@@ -79,7 +59,11 @@
 
         $("#buyBtn").click(function () {
             const url = '/ads/api/initiateTransaction'; // Assuming that the registration API is hosted on the same server
-
+            console.log("sent ad:")
+            console.log(theAd)
+            console.log(theAd.id)
+            console.log(theAd.price)
+            console.log(theAd.userId)
             $.ajax({
                 url: url,
                 async: true,
@@ -88,7 +72,7 @@
                 data: JSON.stringify({
                     ID: theAd.id,
                     Price: theAd.price,
-                    UserId: theAd.UserId,
+                    UserId: theAd.userId,
                 }),
                 success: function (data) {
                     console.log(data);
