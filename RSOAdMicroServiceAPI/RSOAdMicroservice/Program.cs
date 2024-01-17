@@ -11,6 +11,17 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 //Database settings
 builder.Services.AddDbContext<AdServicesRSOContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
@@ -78,6 +89,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseCors("AllowAllOrigins");
 
 app.MapCarter();
 app.UseOpenApi();
