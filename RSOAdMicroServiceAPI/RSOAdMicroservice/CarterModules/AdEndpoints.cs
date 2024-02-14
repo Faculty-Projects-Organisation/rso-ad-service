@@ -4,7 +4,6 @@ using RSO.Core.AdModels;
 using RSO.Core.BL;
 using RSO.Core.BL.LogicModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 namespace RSOAdMicroservice.CarterModules;
 
