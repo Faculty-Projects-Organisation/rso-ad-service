@@ -6,4 +6,6 @@ public class UserServicesSettingsConfiguration
     /// Example.
     /// </summary>
     public string PasswordSalt { get; init; }
+
+    public string UserServiceEndpoint { get; init; }
 }

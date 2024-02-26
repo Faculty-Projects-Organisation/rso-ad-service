@@ -25,11 +25,13 @@ builder.Services.AddDbContext<AdServicesRSOContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("AdServicesRSOdB")));
 
 builder.Services.AddHealthChecks()
-    .AddCheck<DatabaseHealthCheck>("Database")
-    .AddCheck<ExternalAPICheck>("CurrencyConverter");
+    .AddCheck<UsersHealthCheck>("UserService");
 
 builder.Services.AddOptions<CrossEndpointsFunctionalityConfiguration>().BindConfiguration("CrossEndpointsFunctionalityConfiguration");
 builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<CrossEndpointsFunctionalityConfiguration>>().Value);
+
+builder.Services.AddOptions<UserServicesSettingsConfiguration>().BindConfiguration("UserServicesSettingsConfiguration");
+builder.Services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<UserServicesSettingsConfiguration>>().Value);
 
 // Register the IOptions object.
 builder.Services.AddOptions<ApiCredentialsConfiguration>()
