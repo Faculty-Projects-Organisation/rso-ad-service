@@ -8,7 +8,7 @@ package ad;
 service AdProto{
 		rpc GetAdsByUserId(AdByIdUserIdRequest) returns (AdsByUserIdReply){
 		option (google.api.http) = {
-			get: "/api/ads/grpc/{userId}"
+			get: "/ads/api/grpc/{userId}"
 		};
 	}
 }
