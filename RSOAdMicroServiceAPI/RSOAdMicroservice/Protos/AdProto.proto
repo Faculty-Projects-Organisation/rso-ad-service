@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "RSOAdMicroservice";
+import "google/api/annotations.proto";
+
+package ad;
+
+service AdProto{
+		rpc GetAdsByUserId(AdByIdUserIdRequest) returns (AdsByUserIdReply){
+		option (google.api.http) = {
+			get: "/api/ads/grpc/{userId}"
+		};
+	}
+}
+
+message AdByIdUserIdRequest{
+	int32 userId = 1;
+}
+
+message AdsByUserIdReply{
+	repeated AdItem Ads = 1;
+}
+
+message AdItem{
+	int32 id = 1;
+	string Thing = 2;
+	int32 Price = 3;
+	string Category = 4;
+	string Status = 5;
+	string PublishDate = 6;
+}

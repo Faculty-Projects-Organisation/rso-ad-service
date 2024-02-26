@@ -7,6 +7,7 @@ using RSO.Core.BL;
 using RSO.Core.Configurations;
 using RSO.Core.Health;
 using RSO.Core.Repository;
+using RSOAdMicroservice.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,10 @@ builder.Services.AddCors(options =>
             builder.WithOrigins("http://20.73.26.56");
         });
 });
+
+//Grpc
+builder.Services.AddGrpc().AddJsonTranscoding();
+builder.Services.AddGrpcSwagger();
 
 //Database settings
 builder.Services.AddDbContext<AdServicesRSOContext>(options =>
@@ -85,6 +90,8 @@ builder.Host.UseSerilog((context, configuration) =>
 
 var app = builder.Build();
 
+app.MapGrpcService<GAdsService>();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -108,5 +115,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.UseSerilogRequestLogging();
-
+app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
 app.Run();

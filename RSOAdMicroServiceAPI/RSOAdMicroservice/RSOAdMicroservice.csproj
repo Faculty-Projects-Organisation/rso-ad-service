@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -7,7 +7,7 @@
     <UserSecretsId>4d89bc4e-8a33-445d-9f58-9f9906d64090</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Carter" Version="7.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.14" />
@@ -15,6 +15,13 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
     <PackageReference Include="NSwag.Core" Version="13.20.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="7.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.3.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\AdProto.proto" GrpcServices="Server,Client" />
   </ItemGroup>
 
   <ItemGroup>

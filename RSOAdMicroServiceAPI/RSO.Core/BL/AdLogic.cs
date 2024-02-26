@@ -28,7 +28,6 @@ public class AdLogic : IAdLogic
         _apicredentialsConfiguration = apicredentialsConfiguration;
         _crossEndpointsFunctionalityConfiguration = crossEndpointsFunctionalityConfiguration;
     }
-    
     public async Task<TransactionDTO> CreateTransactionAsync(TransactionDTO transactionDto)
     {
         var jsonPayload = JsonConvert.SerializeObject(transactionDto);
@@ -128,7 +127,6 @@ public class AdLogic : IAdLogic
             return null;
         }
     }
-
 
     public async Task<List<Ad>> GetAllAdsAsync()
     {
